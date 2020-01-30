@@ -1,0 +1,361 @@
+<nz-content class="outer-content">
+    <nz-layout class="inner-layout">
+      <nz-sider nzWidth="200px" nzTheme="light">
+        <ul nz-menu nzMode="inline" class="sider-menu">
+          <li  nz-menu-item nzSelected (click)="onDaily()">
+            <i nz-icon nzType="calendar" nzTheme="outline"></i> Daily Sales</li>
+          <li nz-menu-item (click)="onReturned()">
+            <i nz-icon nzType="sync" nzTheme="outline"></i> Returned Products</li>
+          <li nz-menu-item (click)="onStock()">
+            <i nz-icon nzType="read" nzTheme="outline"></i> Stock History</li>
+          <li nz-menu-item (click)="onEmployee()">
+            <i nz-icon nzType="solution" nzTheme="outline"></i> Employees Pick</li>
+        <li nz-menu-item (click)="onExpired()">
+            <i nz-icon nzType="schedule" nzTheme="outline"></i> Expired Products</li>            
+        </ul>
+      </nz-sider>
+      <nz-content class="inner-content">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <nz-date-picker [(ngModel)]="fromDate" nzPlaceHolder="From Date" nzFormat="dd-MMM-yyyy"
+            style="margin-right: 10px;"></nz-date-picker>
+            <nz-date-picker [(ngModel)]="toDate" nzPlaceHolder="To Date" nzFormat="dd-MMM-yyyy"
+            style="margin-right: 10px;"></nz-date-picker>
+            <button nz-button nzType="danger" (click)="onFilter()">
+              <i nz-icon nzType="monitor" nzTheme="outline"></i> Get Report</button>
+          </div>
+          <!-- REPORT START HERE -->
+
+          <div [ngClass]="{ReportGone:ds===false , ReportVisible:ds===true }"> <!--Daily Sales-->
+            <nz-table #DailySalesTable [nzData]="rptDaily" [nzPageSize]="10" [nzFooter]="footer">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Qty</th>
+                        <th>Tablets/Box</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Staff</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of DailySalesTable.data">
+                        <td>{{data.productName}}</td>
+                        <td>{{data.qty}}</td>
+                        <td>{{data.tbtBox}}</td>
+                        <td> {{data.unitPrice}} </td>
+                        <td> {{data.total}} </td>
+                        <td> {{data.datePosted | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                        <td> {{data.cashier}} </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+
+        </div> <!--Daily Sales Report End-->
+
+        <div [ngClass]="{ReportGone:rt===false , ReportVisible:rt===true }"> <!--Return Products-->
+          <nz-table #ReturnedTable [nzData]="rptReturned" [nzPageSize]="10" [nzFooter]="footer">
+              <thead>
+                  <tr>
+                      <th>Product Name</th>
+                      <th>Qty</th>
+                      <th>Tablets/Box</th>
+                      <th>Unit Price</th>
+                      <th>Total</th>
+                      <th>Reason</th>
+                      <th>Date Returned</th>
+                      <th>Staff</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let data of ReturnedTable.data">
+                      <td>{{data.itemName}}</td>
+                      <td>{{data.quantity}}</td>
+                      <td>{{data.tabletOrBox}}</td>
+                      <td> {{data.unitPrice}} </td>
+                      <td> {{data.total}} </td>
+                      <td> {{data.returnReason}} </td>
+                      <td> {{data.dateReturned | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                      <td> {{data.returnedBy}} </td>
+                  </tr>
+              </tbody>
+          </nz-table>
+
+      </div> <!--Returned Report End-->    
+          
+      <div [ngClass]="{ReportGone:st===false , ReportVisible:st===true }"> <!--Stock History-->
+        <nz-table #StockTable [nzData]="rptStock" [nzPageSize]="10" [nzFooter]="footer">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Retail Price</th>
+                    <th>Wholesale Price</th>
+                    <th>Cost</th>
+                    <th>Qty Stocked</th>
+                    <th>Stock Before</th>
+                    <th>Supplier</th>
+                    <th>Date</th>
+                    <th>Stocked By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of StockTable.data">
+                    <td>{{data.itemName}}</td>
+                    <td>{{data.categoryName}}</td>
+                    <td>{{data.retailPrice}}</td>
+                    <td> {{data.wholeSalePrice}} </td>
+                    <td> {{data.cost}} </td>
+                    <td> {{data.quantityAdded}} </td>
+                    <td> {{data.stockLevelBeforeStock}} </td>
+                    <td> {{data.supplier}} </td>
+                    <td> {{data.dateStocked | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                    <td> {{data.stockedBy}} </td>
+                </tr>
+            </tbody>
+        </nz-table>
+
+    </div> <!--Stock History End-->      
+
+    <div [ngClass]="{ReportGone:em===false , ReportVisible:em===true }"> <!--Employee Pick Report-->
+      <nz-table #EmployeeTable [nzData]="rptEmp" [nzPageSize]="10" [nzFooter]="footer">
+          <thead>
+              <tr>
+                  <th>Product Name</th>
+                  <th>Qty</th>
+                  <th>Tablets/Box</th>
+                  <th>Date</th>
+                  <th>Reason</th>
+                  <th>Staff</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let data of EmployeeTable.data">
+                  <td>{{data.productName}}</td>
+                  <td>{{data.qty}}</td>
+                  <td>{{data.tbtBox}}</td>
+                  <td> {{data.datePosted | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                  <td> {{data.comment}} </td>
+                  <td> {{data.cashier}} </td>
+              </tr>
+          </tbody>
+      </nz-table>
+
+    </div> <!--Employee Pick Report End-->
+
+    <div [ngClass]="{ReportGone:ex===false , ReportVisible:ex===true }"> <!--Expired items Report-->
+        <nz-table #ExpiredTable [nzData]="rptExp" [nzPageSize]="10" [nzFooter]="footer">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Retail Price</th>
+                    <th>Whole Sale</th>
+                    <th>Cost</th>
+                    <th>Qty</th>
+                    <th>Supplier</th>
+                    <th>Expired On</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of ExpiredTable.data">
+                    <td>{{data.itemName}}</td>
+                    <td>{{data.categoryName}}</td>
+                    <td>{{data.retailPrice}}</td>
+                    <td> {{data.wholeSalePrice}} </td>
+                    <td> {{data.cost}} </td>
+                    <td> {{data.stockLevel}} </td>
+                    <td> {{data.supplier}} </td>
+                    <td> {{data.expirationDate | date : 'dd-MMM-yyyy'}} </td>
+                </tr>
+            </tbody>
+        </nz-table>
+  
+      </div> <!--Expired Report End-->    
+
+    <ng-template #footer>
+        <div nz-row>
+            <div nz-col [nzSpan] = "12">
+                <button nz-button nzType="primary" (click)="onPrint()">
+                    <i nz-icon type="printer" ></i> Print</button>
+            </div>
+            <div nz-col [nzSpan] = "12">
+                Total: {{count}}
+            </div>                    
+        </div>
+    </ng-template>
+  <!-- REPORT ENDS HERE -->
+      </nz-content>
+    </nz-layout>
+  </nz-content>
+
+  <!-- PRINTING SECTION -->
+<!-- DAILY SALES -->
+  <div id="dailyReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Daily Sales Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Qty</th>
+              <th>Tablets/Box</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Date</th>
+              <th>Staff</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptDaily">
+              <td>{{data.productName}}</td>
+              <td>{{data.qty}}</td>
+              <td>{{data.tbtBox}}</td>
+              <td> {{data.unitPrice}} </td>
+              <td> {{data.total}} </td>
+              <td> {{data.datePosted | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+              <td> {{data.cashier}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- RETURNED -->
+<div id="returnedReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Returned Products Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Qty</th>
+                <th>Tablets/Box</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+                <th>Reason</th>
+                <th>Date Returned</th>
+                <th>Staff</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptReturned">
+                <td>{{data.itemName}}</td>
+                <td>{{data.quantity}}</td>
+                <td>{{data.tabletOrBox}}</td>
+                <td> {{data.unitPrice}} </td>
+                <td> {{data.total}} </td>
+                <td> {{data.returnReason}} </td>
+                <td> {{data.dateReturned | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                <td> {{data.returnedBy}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- STOCK HISTORY -->
+<div id="stockReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Stock History Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Retail Price</th>
+                <th>Wholesale Price</th>
+                <th>Cost</th>
+                <th>Qty Stocked</th>
+                <th>Stock Before</th>
+                <th>Supplier</th>
+                <th>Date</th>
+                <th>Stocked By</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptStock">
+                <td>{{data.itemName}}</td>
+                <td>{{data.categoryName}}</td>
+                <td>{{data.retailPrice}}</td>
+                <td> {{data.wholeSalePrice}} </td>
+                <td> {{data.cost}} </td>
+                <td> {{data.quantityAdded}} </td>
+                <td> {{data.stockLevelBeforeStock}} </td>
+                <td> {{data.supplier}} </td>
+                <td> {{data.dateStocked | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                <td> {{data.stockedBy}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- EMPLOYEE PICKS -->
+<div id="empPickReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Employees Pick Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Qty</th>
+                <th>Tablets/Box</th>
+                <th>Date</th>
+                <th>Reason</th>
+                <th>Staff</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptEmp">
+                <td>{{data.productName}}</td>
+                <td>{{data.qty}}</td>
+                <td>{{data.tbtBox}}</td>
+                <td> {{data.datePosted | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                <td> {{data.comment}} </td>
+                <td> {{data.cashier}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- EXPIRED ITEMS -->
+<div id="expiredReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Expired Items Moved Out of Stock Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Retail Price</th>
+                <th>Whole Sale</th>
+                <th>Cost</th>
+                <th>Qty</th>
+                <th>Supplier</th>
+                <th>Expired On</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptExp">
+                <td>{{data.itemName}}</td>
+                <td>{{data.categoryName}}</td>
+                <td>{{data.retailPrice}}</td>
+                <td> {{data.wholeSalePrice}} </td>
+                <td> {{data.cost}} </td>
+                <td> {{data.stockLevel}} </td>
+                <td> {{data.supplier}} </td>
+                <td> {{data.expirationDate | date : 'dd-MMM-yyyy'}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+  <!-- END PRINTING SECTION -->

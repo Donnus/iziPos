@@ -1,0 +1,118 @@
+<div nz-row nzGutter="16">
+    <div nz-col nzSpan="12">
+        <form nz-form [formGroup]="userForm" (submit)="saveDetails(userForm.value)">
+            <nz-form-item>
+              <nz-form-label nzRequired [nzSpan]="6">Full Name</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Full Name is required">
+                  <input required nz-input placeholder="John Doe" formControlName="fullName" />
+              </nz-form-control>
+
+              <nz-form-label nzRequired [nzSpan]="6">Gender</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Gender is required">
+                <nz-select  nzAllowClear nzPlaceHolder="Gender" formControlName="gender">
+                    <nz-option nzValue="Male" nzLabel="Male"></nz-option>
+                    <nz-option nzValue="Female" nzLabel="Female"></nz-option>
+                  </nz-select>
+              </nz-form-control>
+
+              <nz-form-label [nzSpan]="6">Address</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17">
+                  <input nz-input placeholder="Address" formControlName="address" />
+              </nz-form-control>  
+              
+              <nz-form-label [nzSpan]="6">Mobile No</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17">
+                  <input nz-input placeholder="Mobile No" formControlName="mobile" />
+              </nz-form-control>
+
+              <nz-form-label [nzSpan]="6">Date Recruited</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17">
+                <nz-date-picker [nzFormat]="dateFormat" formControlName="dateRecruited"></nz-date-picker>
+              </nz-form-control>   
+              
+              <nz-form-label nzRequired [nzSpan]="6">Type Of ID</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Type Of ID is required">
+                <nz-select  nzAllowClear nzPlaceHolder="ID Type" formControlName="idType">
+                    <nz-option nzValue="Voter's" nzLabel="Voter's"></nz-option>
+                    <nz-option nzValue="Passport" nzLabel="Passport"></nz-option>
+                    <nz-option nzValue="NHIS" nzLabel="NHIS"></nz-option>
+                    <nz-option nzValue="Driver's License" nzLabel="Driver's License"></nz-option>
+                  </nz-select>
+              </nz-form-control>  
+              
+              <nz-form-label nzRequired  [nzSpan]="6">ID Card No</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="ID Number is required">
+                  <input name="required" required nz-input placeholder="Id Card No" formControlName="idNumber" />
+              </nz-form-control>              
+
+              <nz-form-label nzRequired  [nzSpan]="6">Username</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Username is required">
+                  <input name="required" required nz-input placeholder="Choose Username" 
+                  formControlName="username" />
+              </nz-form-control> 
+              
+              <nz-form-label nzRequired  [nzSpan]="6">Password</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Password is required">
+                  <input type="password" name="required" required nz-input placeholder="Password" 
+                  formControlName="password" />
+              </nz-form-control> 
+              
+              <nz-form-label nzRequired  [nzSpan]="6">Confirm Pwd</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Confirmation Password is required">
+                  <input type="password" name="required" required nz-input placeholder="Confirm Password" 
+                  formControlName="confirmPass" />
+              </nz-form-control>   
+              
+              <nz-form-label nzRequired [nzSpan]="6">User Role</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="User Role is required">
+                <nz-select nzAllowClear nzPlaceHolder="User Role" formControlName="userRole" >
+                    <nz-option nzValue="Sales" nzLabel="Sales"></nz-option>
+                    <nz-option nzValue="Stock Management" nzLabel="Stock Management"></nz-option>
+                    <nz-option nzValue="Administrator" nzLabel="Administrator"></nz-option>
+                </nz-select>
+              </nz-form-control>               
+
+            </nz-form-item>
+            <nz-form-item>
+              <div nz-row nzGutter="8">
+                <div nz-col nzSpan="12">
+                    <nz-form-control>
+                        <button [nzLoading]="isLoading" nz-button [nzType]="'primary'" nzBlock>Save Details</button>
+                      </nz-form-control>
+                </div>
+                <div nz-col nzSpan="12">
+                    <nz-form-control>
+                        <button type="reset" (click)="reset()" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                      </nz-form-control>
+                </div>
+              </div>
+
+            </nz-form-item>
+          </form>
+    </div> <!--  END FORM-->
+    <div nz-col nzSpan="12">
+      <nz-table #userTable [nzData]="allUsers" [nzPageSize]="50" [nzScroll]="{ y: '400px' }">
+        <!-- nzFooter="Total: {{stocksToDisplay.length}}" -->
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of userTable.data">
+              <td>{{ data.fullName }}</td>
+              <td class="column-align">{{ data.username }}</td>
+              <td class="column-align">{{ data.userRole }}</td>
+              <td class="column-align">
+                <!-- <nz-divider nzType="vertical"></nz-divider> -->
+                <a nzTitle="Edit User Details" nz-tooltip (click)="onEdit(data)">
+                  <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+    </div>
+  </div>

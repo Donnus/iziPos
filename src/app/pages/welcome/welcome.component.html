@@ -1,0 +1,135 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar"
+              nzCollapsible
+              nzWidth="256px"
+              nzBreakpoint="md"
+              [(nzCollapsed)]="isCollapsed"
+              [nzTrigger]="null">
+      <div class="sidebar-logo">
+        <a target="_blank">
+          <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+          <h1>{{companyDetails.companyName}}</h1>
+        </a>
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-submenu nzOpen nzTitle="POINT OF SALES" nzIcon="shopping-cart" *ngIf="isRetailAllow">
+          <ul>
+            <li nz-menu-item nzMatchRouter style="display: none;">
+              <a routerLink="/welcome" (click)="setTitle()"><i nz-icon nzType="home" nzTheme="outline"></i> Welcome</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/retail"> <i nz-icon nzType="shopping-cart" nzTheme="outline"></i> Retail</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/whole_sales" > <i nz-icon nzType="shopping" nzTheme="outline"></i> Whole Sale</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a nz-popconfirm
+              nzTitle="Once the shop is closed, no order can be processed. Do you want to continue?"
+              nzOkText="Yes" nzCancelText="Cancel" (nzOnConfirm)="onBusinessClose()"> 
+                <i nz-icon nzType="close-circle" nzTheme="outline"></i> Close Shop</a>
+            </li> 
+            <li nz-menu-item nzMatchRouter>
+              <a  nz-popconfirm nzPlacement="right"
+              nzTitle="Open Shop to start Businness For Today. Do you want to continue?"
+              nzOkText="Yes" nzCancelText="Cancel" (nzOnConfirm)="onBusinessOpen()"> 
+                <i nz-icon nzType="shop" nzTheme="outline"></i> Open Shop</a>
+            </li>             
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="STOCK MANAGEMENT" nzIcon="shop" *ngIf="isStockAllow">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/stocks"> <i nz-icon nzType="plus-circle" nzTheme="outline"></i> Add New Stock</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/notifier"> <i nz-icon nzType="notification" nzTheme="outline"></i> Products Notifications</a>
+            </li>            
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="ADMINISTRATION" nzIcon="setting" *ngIf="isAdministrationAllow">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/user_management"> <i nz-icon nzType="team" nzTheme="outline"></i> User Management</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/empcare"><i nz-icon nzType="medicine-box" nzTheme="outline"></i> Employees Care</a>
+            </li>            
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/report"> <i nz-icon nzType="pie-chart" nzTheme="outline"></i> Report</a>
+            </li>      
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/settings"> <i nz-icon nzType="tool" nzTheme="outline"></i> Settings</a>
+            </li>    
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/payment"> <i nz-icon nzType="wallet" nzTheme="outline"></i> Suppliers Payment</a>
+            </li>   
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome/sms"> <i nz-icon nzType="message" nzTheme="outline"></i> Send SMS</a>
+            </li>                                       
+          </ul>
+        </li>        
+      </ul>
+    </nz-sider>
+    <nz-layout>
+      <nz-header>
+        <div class="app-header">
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+              <i class="trigger"
+                 nz-icon
+                 [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+              ></i> {{locationTitle}}
+          </span>
+
+          <div style="float: right; margin-right: 20px;">
+           <b style="color: rgba(255, 0, 0, 0.884); font-style: italic;" >
+            SHOP IS {{status}} FOR {{workingDate | date: 'dd-MMM-yyyy'}} </b>
+
+            <nz-badge nzDot [nzShowDot]="'notify'" style="margin-right: 20px; margin-left: 40px;">
+              <a nz-popover nzPlacement="bottom"
+                [nzContent]="notif">
+                <i style="font-size: 20px;" nz-icon nzType="notification" nzTheme="outline"></i>
+              </a>
+              <ng-template #notif>
+                <p><a routerLink="/welcome/notifier"> {{outOfStock[0].itemName}} and  {{totalOut}}  other Item(s) are runing out of stock </a></p>
+                <p *ngIf="expired.length > 0"><a routerLink="/welcome/notifier"> {{expired[0].itemName}} and  {{totalExpired}}  other Item(s) are about to expire </a></p>
+              </ng-template>
+
+            </nz-badge>
+
+            <a>
+            <nz-avatar
+            nz-popover nzPlacement="bottom"
+            nzContent="Hello {{loggedinUser}}"
+            [ngStyle]="{ 'background-color': '#1890ff' }" [nzText]="loggedinUser" nzSize="large"
+            style="vertical-align: middle;"></nz-avatar> </a>
+
+            <button nz-button nzType="link" nz-popconfirm nzTitle="Do you want to Logout?"
+            nzOkText="Yes" nzCancelText="No" (nzOnConfirm)="onLogout()"> 
+              <i nz-icon nzType="logout" nzTheme="outline"></i> Log out</button>
+          </div>
+        </div>
+      </nz-header>
+      <nz-content>
+        <div class="inner-content">
+          <router-outlet></router-outlet>
+        </div>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+  
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="Important Notifications"
+(nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()" nzOkText="More Details" nzCancelText="Ok" [nzContent]="notifications" nzWidth="50%" >
+
+  <ng-template #notifications>
+    <h2 style="font-weight: bolder; color: red;">
+      <i nz-icon nzType="bell" style="font-size: x-large;" nzTheme="outline"></i> 
+      {{outOfStock[0].itemName}} and  {{totalOut}}  other Item(s) are runing out of stock
+    </h2>
+    <h2 *ngIf="expired.length > 0" style="font-weight: bolder; color: red;">
+      <i nz-icon nzType="bell" style="font-size: x-large;" nzTheme="outline"></i> 
+      {{expired.itemName}} and  {{totalExpired}}  other Item(s) are about to expire
+    </h2>
+  </ng-template>
+
+</nz-modal>

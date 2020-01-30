@@ -1,0 +1,42 @@
+<nz-layout>
+    <nz-header>
+      <img src="../../../favicon.ico" class="logo" alt="">
+      <ul nz-menu nzTheme="dark" nzMode="horizontal">
+        <li> <b>{{compName}}</b> </li>
+      </ul>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <div style="margin: 0 auto; width: 100%; text-align: center; margin-bottom: 20px;">
+            <nz-avatar [nzSize]="68" nzSrc="../../../assets/pharma.png"></nz-avatar>
+        </div>
+
+        <nz-card style="width:400px; margin: 0 auto; text-align: center" nzTitle="Login Portal">
+            <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="submitForm(loginForm.value)" 
+            style="margin: 0 auto;">
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Please input your username!">
+                    <nz-input-group nzPrefixIcon="user">
+                      <input type="text" nz-input formControlName="userName" placeholder="Username" />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Please input your Password!">
+                    <nz-input-group nzPrefixIcon="lock">
+                      <input type="password" nz-input formControlName="secretKey" placeholder="Password" />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <a class="login-form-forgot" class="login-form-forgot">Forgot password</a>
+                    <button nz-button class="login-form-button" [nzLoading]="isLoading" [nzType]="'primary'">Log in</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </form>
+          </nz-card>
+      </div>
+    </nz-content>
+</nz-layout>
+<particles [style]="myStyle" [width]="width" [height]="height" [params]="myParams"></particles>

@@ -1,0 +1,68 @@
+<div [ngClass]="{overlayInactive:loading===false , overlayActive:loading===true }">
+        <div id="load">
+            <nz-spin [nzSize]="'large'" [nzTip]="'Loading...'">
+            </nz-spin>
+        </div>
+      </div>
+
+<div style="margin: 0 auto; width: 80%;">
+
+    <textarea [(ngModel)]="msg" nz-input rows="3" placeholder="Type message here..."></textarea>
+
+    <div nz-row style="margin-top: 15px;">
+        <div nz-col [nzSpan]="10" style="margin-right: 5px;">
+            <nz-input-group nzCompact>
+                <input type="text" nz-input [(ngModel)]="phoneNumber" placeholder="eg:0545849929" style="width:80%;" />
+            </nz-input-group>
+        </div>
+        <div nz-col [nzSpan]="8" style="text-align: center;">
+            <nz-radio-group [(ngModel)]="radioValue">
+                <label nz-radio nzValue="Specific">Specific Person</label>
+                <label nz-radio nzValue="Staff">Staff</label>
+            </nz-radio-group>
+        </div>
+        <div nz-col [nzSpan]="5">
+            <button nz-button nzType="primary" nzBlock (click)="onAdd()" >
+                <i nz-icon type="plus-circle" theme="outline"></i> Add</button>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;">
+        <nz-table #nzTable [nzData]="smsLists" [nzPageSize]="50" [nzScroll]="{ y: '240px' }" [nzFooter]="footer">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of smsLists">
+                    <td>{{data.fullName}}</td>
+                    <td>{{data.mobile}}</td>
+                    <td>{{data.status}}</td>
+                    <td>
+                        <span nz-tooltip nzTitle="Remove from list">
+                            <a nz-popconfirm nzTitle="Are you sure to remove this?" 
+                                (nzOnConfirm)="onRemove(data)" ><i nz-icon type="close" theme="outline"></i></a>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <ng-template #footer>
+                <div nz-row>
+                    <div nz-col [nzSpan] = "11">
+                        <button nz-button nzBlock nzType="primary" (click)="onSend()" nzSearch >
+                        <i nz-icon type="message" nzTheme="outline"></i> Send</button>
+                    </div>
+                    <div nz-col [nzSpan] = "11" style="margin-left: 10px;">
+                        <button nz-button nzBlock nzType="danger" (click)="onCancel()" nzSearch >
+                            <i nz-icon type="close" ></i> Cancel</button>
+                    </div>                    
+                </div>
+        </ng-template>        
+    </div>
+
+</div>

@@ -1,0 +1,142 @@
+<div nz-row nzGutter="8" style="margin-top: 50;">
+    <div nz-col nzSpan="10">
+        <form [formGroup]="paymentForm" (submit)="processPayment(paymentForm.value)">
+            <nz-form-item>
+                <nz-form-label  [nzSpan]="8">Supplier Id</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="16" >
+                    <input nz-input placeholder="Supplier Id" formControlName="supplierId" readonly />
+                </nz-form-control> 
+
+                <nz-form-label nzRequired  [nzSpan]="8">Amount</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="16" nzErrorTip="Amount is required">
+                    <input type="number" nz-input placeholder="Enter Amount to pay" formControlName="amount" />
+                </nz-form-control>    
+                
+                <nz-form-label nzRequired [nzSpan]="8">Narration</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="16">
+                    <input nz-input placeholder="Provide a Narration" formControlName="narration" />
+                </nz-form-control>   
+
+            </nz-form-item>
+            <nz-form-item>
+                <div nz-row nzGutter="8">
+                    <div nz-col nzSpan="8">
+
+                    </div>
+                    <div nz-col nzSpan="16">
+                        <div nz-row nzGutter="8">
+                            <div nz-col nzSpan="12">
+                                <nz-form-control>
+                                    <button nz-button [nzType]="'primary'" nzBlock>
+                                        <i nz-icon nzType="credit-card"></i>Pay</button>
+                                </nz-form-control>                                     
+                            </div>
+                            <div nz-col nzSpan="12">
+                                <nz-form-control>
+                                    <button type="reset" nz-button [nzType]="'danger'" nzBlock>
+                                        <i nz-icon nzType="close"></i>Cancel</button>
+                                </nz-form-control>
+                            </div>                                
+                        </div>                           
+                    </div>
+                </div>
+            </nz-form-item>                
+        </form>
+    </div>
+    <div nz-col nzSpan="14">
+        <nz-table #supTable [nzData]="allSuppliers" [nzPageSize]="50" [nzScroll]="{ y: '400px' }">
+            <thead>
+            <tr>
+                <th>Suppier</th>
+                <th>Contact</th>
+                <th>Balance</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of supTable.data">
+                <td>{{ data.supplier }}</td>
+                <td>{{ data.contact }}</td>
+                <td> {{ data.balance }} </td>
+                <td>
+                <a nzTitle="Make Payment" nz-tooltip (click)="onPayment(data)">
+                    <i class="ico-size" nz-icon nzType="wallet" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                <a nzTitle="Check Payment History" nz-tooltip (click)="onHistory(data)">
+                    <i class="ico-size" nz-icon nzType="reconciliation" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>                    
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>        
+  </div>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Payment History for {{selectedSupplier}}" [nzFooter]="modalFooter"
+[nzContent]="modalContent" nzWidth="70%">
+
+  <ng-template #modalContent>
+    <nz-table [nzData]="history"
+    [nzPageSize]="20" [nzScroll]="{ y: '230px' }">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Account Name</th>
+              <th>Paid</th>
+              <th>Item Cost</th>
+              <th>Narration</th>
+              <th>Balance</th>
+              <th>Staff</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of history">
+              <td>{{data.date | date :'dd/MMM/yyyy'}}</td>
+              <td>{{data.accountName}}</td>
+              <td *ngIf="data.trxType === 'C'">{{data.amount}}</td>
+              <td *ngIf="data.trxType != 'C'">-</td>
+              <td *ngIf="data.trxType === 'D'">{{data.amount}}</td>
+              <td *ngIf="data.trxType != 'D'">-</td>
+              <td>{{data.narration}}</td>
+              <td>{{data.balance}}</td>
+              <td>{{data.operator}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Close</button>
+    <button nz-button nzType="primary" (click)="print('payHistory')">Print</button>
+  </ng-template>
+
+</nz-modal>
+
+<div id="payHistory" style="display: none">
+<h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Payment History For {{selectedSupplier}}</h3>
+<table style="width: 100%;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Account Name</th>
+          <th>Paid</th>
+          <th>Item Cost</th>
+          <th>Narration</th>
+          <th>Balance</th>
+          <th>Staff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of history">
+          <td>{{data.date | date :'dd/MMM/yyyy'}}</td>
+          <td>{{data.accountName}}</td>
+          <td *ngIf="data.trxType === 'C'">{{data.amount}}</td>
+          <td *ngIf="data.trxType != 'C'">-</td>
+          <td *ngIf="data.trxType === 'D'">{{data.amount}}</td>
+          <td *ngIf="data.trxType != 'D'">-</td>
+          <td>{{data.narration}}</td>
+          <td>{{data.balance}}</td>
+          <td>{{data.operator}}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>

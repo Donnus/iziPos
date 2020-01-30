@@ -1,0 +1,184 @@
+<nz-tabset>
+    <nz-tab [nzTitle]="outs">
+      <ng-template #outs> <i nz-icon nzType="stock" nzTheme="outline"></i> Products Out Of Stock Alert </ng-template>
+   
+      <div nz-row style="margin-top: 40px; margin-bottom: 20px;">
+        <div nz-col nzSpan="12">
+            <h4>ITEMS RUNNING OUT OF STOCK</h4>
+        </div>
+        <div  nz-col nzSpan="12">
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input type="text" nzSize="small" nz-input placeholder="Search Product" 
+                (input)="onSearch($event.target.value)" />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <i nz-icon type="search"></i>
+              </ng-template>
+        </div>
+      </div>
+        <nz-table #outStock [nzData]="outOfStocksDisplay" [nzPageSize]="50" [nzScroll]="{ y: '500px' }"
+        [nzFooter]="footerout">
+            <thead>
+              <tr>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Product Category</th>
+                <th>Stock Level</th>
+                <th>Supplier</th>
+                <th>Supplier Contact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of outStock.data">
+                <td>{{ data.itemId }}</td>
+                <td align="right">{{ data.itemName }}</td>
+                <td align="right">{{ data.categoryName}}</td>
+                <td align="right">{{ data.stockLevel }}</td>
+                <td align="right">{{ data.supplier }}</td>
+                <td align="right">{{ data.contact }}</td>
+              </tr>
+            </tbody>
+          </nz-table>      
+          <ng-template #footerout>
+            <div nz-row>
+                <div nz-col [nzSpan] = "12">
+                    <button nz-button nzType="primary" (click)="onPrint('outReport')">
+                        <i nz-icon type="printer" ></i> Print</button>
+                </div>
+                <div nz-col [nzSpan] = "12">
+                    Total: {{outOfStocksDisplay.length}}
+                </div>                    
+            </div>
+        </ng-template>
+    </nz-tab>
+
+
+    <!-- EXPIRY TAB -->
+    <nz-tab [nzTitle]="expiry">
+        <ng-template #expiry> <i nz-icon nzType="calendar" nzTheme="outline"></i> Expiring Products Alert </ng-template>
+      
+        <div nz-row style="margin-top: 40px; margin-bottom: 20px;">
+          <div nz-col nzSpan="12">
+              <h4>ITEMS ABOUT TO EXPIRE OR EXPIRED ITEMS</h4>
+          </div>
+          <div  nz-col nzSpan="12">
+            <div nz-row>
+              <div nz-col nzSpan="14">
+                <nz-input-group [nzSuffix]="suffixIconSearch">
+                  <input type="text" nzSize="small" nz-input placeholder="Search Expired Product" 
+                  (input)="onSearchExpired($event.target.value)" />
+                </nz-input-group>
+                <ng-template #suffixIconSearch>
+                  <i nz-icon type="search"></i>
+                </ng-template>
+              </div>
+              <div nz-col nzSpan="8">
+                <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Product Type"
+                style="width: 100%; margin-left: 10px;" (ngModelChange)="onSelectionChanged()">
+                  <nz-option nzValue="All" nzLabel="All"></nz-option>
+                  <nz-option nzValue="Expired" nzLabel="Expired"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+        </div>
+          <nz-table #expiredTable [nzData]="expiredDisplay" [nzPageSize]="50" [nzScroll]="{ y: '500px' }"
+          [nzFooter]="footer">
+              <thead>
+                <tr>
+                  <th>Product Code</th>
+                  <th>Product Name</th>
+                  <th>Product Category</th>
+                  <th>Quantity</th>
+                  <th>Expiry Date</th>
+                  <th>Remaining Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of expiredTable.data">
+                  <td>{{ data.itemId }}</td>
+                  <td align="right">{{ data.itemName }}</td>
+                  <td align="right">{{ data.category}}</td>
+                  <td align="right">{{ data.quantity }}</td>
+                  <td align="center">{{ data.expiryDate | date:'dd/MMM/yyyy' }}</td>
+                  <td *ngIf="data.remainingDays <= 0" align="center">Expired</td>
+                  <td *ngIf="data.remainingDays > 0" align="center">{{ data.remainingDays }}</td>
+                </tr>
+              </tbody>
+            </nz-table> 
+            <ng-template #footer>
+              <div nz-row>
+                  <div nz-col [nzSpan] = "6">
+                      <button nz-button nzType="primary" (click)="onPrint('expiredReport')" nzBlock>
+                          <i nz-icon type="printer" ></i> Print</button>
+                  </div>
+                  <div nz-col [nzSpan] = "6" style="margin-left: 5px; margin-right: 10px;">
+                    <button nz-button nzType="danger" nzBlock nz-popconfirm
+                    nzTitle="This Process will move all Expired Items out of Stock. Do you Want to continue?"
+                    nzOkText="Yes" nzCancelText="Cancel" (nzOnConfirm)="onMoveExpired()">
+                      <i nz-icon type="close" ></i> Remove From Stock</button>
+                  </div>
+                  <div nz-col [nzSpan] = "11">
+                      Total: {{expiredDisplay.length}}
+                  </div>                    
+              </div>
+          </ng-template>      
+      </nz-tab>
+
+  </nz-tabset>
+<!-- OUT OF STOCK REPORT -->
+  <div id="outReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Items Running Out Of Stock Report</h3>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+              <th>Product Code</th>
+              <th>Product Name</th>
+              <th>Product Category</th>
+              <th>Stock Level</th>
+              <th>Supplier</th>
+              <th>Supplier Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of outOfStocksDisplay">
+              <td>{{ data.itemId }}</td>
+              <td align="right">{{ data.itemName }}</td>
+              <td align="right">{{ data.categoryName}}</td>
+              <td align="right">{{ data.stockLevel }}</td>
+              <td align="right">{{ data.supplier }}</td>
+              <td align="right">{{ data.contact }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- EXPIRED REPORT -->
+<div id="expiredReport" style="display: none">
+  <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+  <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Items About To Expire Or Expired Items Report</h3>
+  <table style="width: 100%;">
+      <thead>
+          <tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Product Category</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+            <th>Remaining Days</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let data of expiredDisplay">
+            <td>{{ data.itemId }}</td>
+            <td align="right">{{ data.itemName }}</td>
+            <td align="right">{{ data.category}}</td>
+            <td align="right">{{ data.quantity }}</td>
+            <td align="center">{{ data.expiryDate | date:'dd/MMM/yyyy' }}</td>
+            <td *ngIf="data.remainingDays <= 0" align="center">Expired</td>
+            <td *ngIf="data.remainingDays > 0" align="center">{{ data.remainingDays }}</td>
+          </tr>
+      </tbody>
+  </table>
+</div>

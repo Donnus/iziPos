@@ -1,0 +1,184 @@
+<div nz-row>
+    <div nz-col nzSpan="10">
+        <form nz-form [formGroup]="stockForm" (submit)="saveStock(stockForm.value)">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6">Item Code</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17">
+                  <input nz-input placeholder="Item Code" formControlName="itemId" readonly />
+              </nz-form-control>
+
+              <nz-form-label [nzSpan]="6">Item Barcode</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17">
+                  <input nz-input placeholder="Item Barcode" formControlName="barcode" />
+              </nz-form-control>
+
+              <nz-form-label nzRequired  [nzSpan]="6">Item Name</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Item Name is required">
+                  <input name="required" required nz-input placeholder="Item Name" 
+                  formControlName="itemName" />
+              </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Category</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback>
+                <nz-select nzShowSearch formControlName="category">
+                  <nz-option *ngFor="let c of categories" nzValue="{{c.categoryName}}" nzLabel="{{c.categoryName}}"></nz-option>
+                </nz-select>
+            </nz-form-control>
+
+            <nz-form-label nzRequired [nzSpan]="6">Brand</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback>
+                <nz-select name="item-brand" formControlName="brand">
+                  <nz-option *ngFor="let b of brands" nzValue="{{b.brand}}" nzLabel="{{b.brand}}"></nz-option>
+                </nz-select>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Retail Price</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Retail Price is required">
+                <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="retailPrice"></nz-input-number>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Whole Sale</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Whole Sale Price is required">
+                <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="wholeSalePrice"></nz-input-number>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Item Cost</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Item Cost is required">
+                <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="cost"></nz-input-number>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Quantity</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Quantity is required">
+                <nz-input-number [nzMin]="1" [nzStep]="1" class="item-cost" formControlName="quantity"></nz-input-number>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">No. Tablets</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Tablet Per Box is required">
+                <nz-input-number [nzMin]="1" [nzStep]="1" class="item-cost" formControlName="tablets"></nz-input-number>
+            </nz-form-control>
+
+            <nz-form-label nzRequired  [nzSpan]="6">Expiry Date</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Product Expiry Date is required">
+              <nz-date-picker [nzFormat]="dateFormat" class="item-cost" formControlName="expiryDate"></nz-date-picker>
+            </nz-form-control>
+
+            <nz-form-label nzRequired [nzSpan]="6">Supplier</nz-form-label>
+            <nz-form-control [nzSpan]="17" nzHasFeedback>
+                <nz-select formControlName="supplier">
+                  <nz-option *ngFor="let s of suppliers" nzValue="{{s.supplier}}" nzLabel="{{s.supplier}}" ></nz-option>
+                </nz-select>
+            </nz-form-control>
+
+            <nz-form-label [nzSpan]="6">Stock Level</nz-form-label>
+            <nz-form-control [nzSpan]="17">
+                <input nz-input placeholder="Stock Level" formControlName="stockLevel" />
+            </nz-form-control>    
+
+            <nz-form-label [nzSpan]="6">Reorder Level</nz-form-label>
+            <nz-form-control [nzSpan]="17">
+                <nz-input-number [nzMin]="1" [nzStep]="1" class="item-cost" formControlName="minLimit"></nz-input-number>
+            </nz-form-control>
+
+            </nz-form-item>
+            <nz-form-item>
+              <div nz-row nzGutter="8">
+                <div nz-col nzSpan="12">
+                    <nz-form-control>
+                        <button type="submit" [nzLoading]="isLoading" nz-button [nzType]="'primary'" nzBlock>Save Stock</button>
+                      </nz-form-control>
+                </div>
+                <div nz-col nzSpan="12">
+                    <nz-form-control>
+                        <button type="button" (click)="reset()" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                      </nz-form-control>
+                </div>
+              </div>
+
+            </nz-form-item>
+          </form>
+    </div>
+
+    <!-- Stock Display -->
+    <div nz-col nzSpan="14">
+
+      <div nz-row>
+        <div nz-col nzSpan="12">
+            <h4>STOCK ITEMS</h4>
+        </div>
+        <div  nz-col nzSpan="12">
+            <nz-input-group [nzSuffix]="suffixIconSearch">
+                <input type="text" nzSize="small" nz-input placeholder="Search Product" 
+                (input)="onSearch($event.target.value)" />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <i nz-icon type="search"></i>
+              </ng-template>
+        </div>
+      </div>
+        <nz-table #stockTable [nzData]="stocksToDisplay" [nzPageSize]="50" [nzScroll]="{ y: '400px' }"
+        nzFooter="Total: {{stocksToDisplay.length}}" [nzTitle]="templ">
+        <ng-template #templ>
+            <nz-button-group>
+                <button nz-button nzType="primary" (click)="ExportToExcel()"> <i nz-icon nzType="file-excel" nzTheme="outline"></i> Export Excel</button>
+                <button nz-button nzType="danger"> <i nz-icon nzType="file-pdf" nzTheme="outline"></i>Export PDF</button>
+                <button nz-button nzType="default" (click)="onPrint()"><i nz-icon nzType="printer" nzTheme="outline"></i> Print</button>
+              </nz-button-group>
+          </ng-template>
+            <thead>
+              <tr>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Stock Level</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of stockTable.data">
+                <td>{{ data.itemId }}</td>
+                <td class="column-align">{{ data.itemName }}</td>
+                <td class="column-align">{{ data.stockLevel }}</td>
+                <td class="column-align">
+                  <!-- <nz-divider nzType="vertical"></nz-divider> -->
+                  <a nzTitle="Edit This Product" nz-tooltip (click)="onEdit(data)">
+                    <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a nzTitle="Take a new Stock" nz-tooltip (click)="onNewStock(data)">
+                      <i nz-icon nzType="plus" nzTheme="outline"></i></a>                    
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+    </div>
+  </div>
+
+<!-- All Stock -->
+<div id="stockReport" style="display: none">
+  <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+  <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">All Stock Items Report</h3>
+  <table style="width: 100%;">
+      <thead>
+          <tr>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Retail Price</th>
+              <th>Whole Sale</th>
+              <th>Cost</th>
+              <th>Qty</th>
+              <th>Supplier</th>
+              <th>Expiry Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let data of stocksToDisplay">
+              <td>{{data.itemName}}</td>
+              <td>{{data.category}}</td>
+              <td>{{data.retailPrice}}</td>
+              <td> {{data.wholeSalePrice}} </td>
+              <td> {{data.cost}} </td>
+              <td> {{data.stockLevel}} </td>
+              <td> {{data.supplier}} </td>
+              <td> {{data.expiryDate | date : 'dd-MMM-yyyy'}} </td>
+          </tr>
+      </tbody>
+  </table>
+</div>

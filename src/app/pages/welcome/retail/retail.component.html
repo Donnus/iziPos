@@ -1,0 +1,204 @@
+<div>
+    <div>
+        <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input type="text" [(ngModel)]="search" name="search" id="search" [nzAutocomplete]="auto" (input)="onSearch($event.target.value)"
+            nz-input placeholder="Scan Barcode or Enter Product Name" />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+
+          <nz-autocomplete #auto>
+            <nz-auto-option *ngFor="let s of suggestions" [nzLabel]="s.itemName" [nzValue]="s.itemId"
+            (click)="onSelect(s)" (keyup.enter)="onEnter()">
+                {{ s.itemName }}
+            </nz-auto-option>
+          </nz-autocomplete>
+
+          <form style="margin-top: 10px;" nz-form [nzLayout]="'inline'">
+                <nz-form-item >
+                  <nz-form-control>
+                    <input style="width: 250px;"[(ngModel)]="productName" name="productName" nz-input placeholder="Product Name" readonly/>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-input-number [nzMin]="1" [(ngModel)]="quantity" name="quantity" [nzStep]="1" 
+                    placeholder="Quantity" (ngModelChange)="onQtyChange()"></nz-input-number>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <nz-select nzAllowClear [(ngModel)]="option" (ngModelChange)="onOptionChange()" name="option" nzPlaceHolder="Choose" style="width: 130px;">
+                        <nz-option nzValue="Tablets" nzLabel="Tablets"></nz-option>
+                        <nz-option nzValue="Container/Box" nzLabel="Container/Box"></nz-option>
+                      </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item style="width: 80px;">
+                  <nz-form-control>
+                    <input nz-input [(ngModel)]="unitPrice" name="unitPrice" placeholder="Unit Price"  readonly/>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item style="width: 100px;">
+                    <nz-form-control>
+                      <input nz-input [(ngModel)]="subtotal" name="subtotal" placeholder="Sub total"  readonly/>
+                    </nz-form-control>
+                  </nz-form-item>                
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button nzType="primary" (click)="AddToCart()"><i nz-icon nzType="shopping-cart" 
+                        nzTheme="outline"></i> Add</button>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button nzType="danger" (click)="onClear()">
+                      <i nz-icon nzType="close-circle" nzTheme="outline"></i> Clear</button>
+                  </nz-form-control>
+                </nz-form-item>    
+
+                <h1>Qty In Stock: <b style="color: red;">{{availInStock}}</b></h1> 
+
+              </form>
+
+              <nz-table style="margin-top: 10px;" #orderTable [nzData]="orderList"
+              [nzPageSize]="20" [nzScroll]="{ y: '230px' }">
+                    <thead>
+                      <tr>
+                        <th>P.Code</th>
+                        <th>Product Name</th>
+                        <th>Qty</th>
+                        <th>Tblt/Box</th>
+                        <th>Price</th>
+                        <th align="center">Subtotal</th>
+                        <th align="right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of orderList">
+                        <td>{{data.itemId}}</td>
+                        <td>{{data.itemName}}</td>
+                        <td align="rights">{{data.qty}}</td>
+                        <td align="center">{{data.option}}</td>
+                        <td align="center">{{data.price}}</td>
+                        <td align="center">{{data.subTotal}}</td>
+                        <td align="right"> 
+                          <a nzTitle="Edit Product" nz-tooltip (click)="onEdit(data)">
+                            <i nz-icon nzType="edit" nzTheme="outline"></i></a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a nzTitle="Remove Product" nz-tooltip nz-popconfirm
+                            nzPopconfirmTitle="Are you sure?"
+                            nzOkText="Yes" nzCancelText="Cancel" (nzOnConfirm)="onRemove(data)">
+                                <i nz-icon nzType="close-circle" nzTheme="outline"></i></a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a nzTitle="Product Prescription" nz-tooltip (click)="onViewPrescription(data)">
+                              <i nz-icon nzType="solution" nzTheme="outline"></i></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </nz-table>
+
+    </div>
+
+    <div nz-row style="margin-top: 20px;">
+      <h2 style="text-align: right;">Purchase Summary</h2>
+
+      <div nz-col nzSpan="16">
+        <div nz-row nzGutter="8">
+          <div nz-col nzSpan="8">
+              <button nz-button nzBlock nzType="primary" nz-popconfirm nzTitle="Print a Reciept?"
+              nzOkText="Yes" nzCancelText="No" (nzOnConfirm)="onPayment(1)" (nzOnCancel)="onPayment(0)">
+                  <i nz-icon nzType="credit-card" nzTheme="outline"></i> Pay</button>
+          </div>
+          <div nz-col nzSpan="8">
+              <button nz-button nzBlock nzType="danger" nz-popconfirm nzTitle="Cancel This Order?"
+              nzOkText="Yes" nzCancelText="No" (nzOnConfirm)="onCancelOrder()">
+                  <i nz-icon nzType="close-circle" nzTheme="outline"></i> Cancel Order</button>            
+            </div>
+          <div nz-col nzSpan="8">
+              <button nz-button nzBlock nzType="dashed" (click)="onDailySale()">
+                  <i nz-icon nzType="bar-chart" nzTheme="outline"></i> Today's Sales</button>          
+            </div>
+        </div>
+
+      </div>
+      <div nz-col nzSpan="8" style="text-align: right;">
+
+        <h2 style="color: green;">TOTAL: GHC {{total.toFixed(2)}} </h2>
+      </div>
+    </div>
+</div>
+
+<!--ORDER RECIEPT-->
+<div id="orderReciept" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Address: {{companyAddress}} </h3>
+    <h4 style="width: 100%; text-align: center; margin-bottom: 10px;"> Tel: {{companyContact}}
+    </h4>
+    <table style=" margin:0 auto ; width: 100%; text-align: center;">
+        <thead>
+            <tr>
+                <th>ItemName</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of orderList">
+                <td>{{data.itemName}}</td>
+                <td>{{data.price}}</td>
+                <td>{{data.qty}}</td>
+                <td>{{data.subTotal}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">TOTAL: GHc {{total.toFixed(2)}} </h3>
+    <nz-divider></nz-divider>
+    <h5 style="width: 100%; text-align: center; margin-bottom: 10px;">Powered by Plutech Technologies </h5>
+</div>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Today's Sales" nzFooter="Total: {{totalSales | currency:'GHS'}}"
+[nzContent]="modalContent" nzWidth="70%" (nzOnCancel)="handleCancel()">
+
+  <ng-template #modalContent>
+    <nz-table [nzData]="dailySales"
+    [nzPageSize]="20" [nzScroll]="{ y: '230px' }">
+          <thead>
+            <tr>
+              <th>Serial Id</th>
+              <th>Product Name</th>
+              <th>Qty</th>
+              <th>Tblt/Box</th>
+              <th>Price</th>
+              <th align="center">Subtotal</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of dailySales">
+              <td>{{data.serialId}}</td>
+              <td>{{data.itemName}}</td>
+              <td align="rights">{{data.quantity}}</td>
+              <td align="center">{{data.tabletorBox}}</td>
+              <td>{{data.unitPrice}}</td>
+              <td>{{data.total}}</td>
+              <td>
+                <a nzTitle="Return this Product?" nz-popover [nzContent]="ret">
+                  <i nz-icon nzType="interaction" nzTheme="outline"></i></a>
+
+                  <ng-template #ret> 
+                    <input nz-input placeholder="Please Provide a Reason" [(ngModel)]="returnReason" />
+                    <br /><br />
+                    <button nz-button (click)="onProductReturn(data)" nzSize="small" nzType="primary">Return Product</button>
+                    &nbsp;&nbsp;
+                    <button nz-button nzSize="small" nzType="danger">Cancel</button>
+                  </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+  </ng-template>
+
+</nz-modal>

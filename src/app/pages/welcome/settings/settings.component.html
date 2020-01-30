@@ -1,0 +1,333 @@
+<nz-tabset>
+    <nz-tab [nzTitle]="prC">
+      <ng-template #prC> <i nz-icon nzType="folder-open"></i>Product Category Management </ng-template>
+      
+      <div nz-row nzGutter="8" style="margin-top: 50;">
+        <div nz-col nzSpan="12">
+            <form [formGroup]="categoryForm" (submit)="onCategorySave(categoryForm.value)">
+                <nz-form-item>
+                    <nz-form-label  [nzSpan]="6">Category Id</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzSpan]="17" >
+                        <input nz-input placeholder="Category Id" formControlName="catId" readonly />
+                    </nz-form-control> 
+                    <nz-form-label nzRequired  [nzSpan]="6">Category Name</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Category Name is required">
+                        <input nz-input placeholder="Category Name" formControlName="catName" />
+                    </nz-form-control>                     
+                </nz-form-item>
+                <nz-form-item>
+                    <div nz-row nzGutter="8">
+                        <div nz-col nzSpan="6">
+
+                        </div>
+                        <div nz-col nzSpan="17">
+                            <div nz-row nzGutter="8">
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button nz-button [nzType]="'primary'" nzBlock>Save Category</button>
+                                    </nz-form-control>                                     
+                                </div>
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button type="reset" (click)="onCatReset()" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                                    </nz-form-control>
+                                </div>                                
+                            </div>                           
+                        </div>
+                    </div>
+                </nz-form-item>                
+            </form>
+        </div>
+        <div nz-col nzSpan="12">
+            <nz-table #catTable [nzData]="allCats" [nzPageSize]="50" [nzScroll]="{ y: '400px' }">
+                <thead>
+                <tr>
+                    <th>Category Id</th>
+                    <th>Category Name</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of catTable.data">
+                    <td>{{ data.categoryId }}</td>
+                    <td class="column-align">{{ data.categoryName }}</td>
+                    <td class="column-align">
+                    <a nzTitle="Edit Category" nz-tooltip (click)="onCatEdit(data)">
+                        <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </nz-table>
+        </div>        
+      </div>
+      
+    </nz-tab> 
+    <!-- SUPPLIER STARTS HERE -->
+    <nz-tab [nzTitle]="suppl">
+        <ng-template #suppl> <i nz-icon nzType="car"></i>Suppliers Management </ng-template>
+
+        <div nz-row nzGutter="8" style="margin-top: 50;">
+            <div nz-col nzSpan="10">
+                <form [formGroup]="supplierForm" (submit)="onSupplierSave(supplierForm.value)">
+                    <nz-form-item>
+                        <nz-form-label  [nzSpan]="8">Supplier Id</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16" >
+                            <input nz-input placeholder="Supplier Id" formControlName="supplierId" readonly />
+                        </nz-form-control> 
+
+                        <nz-form-label nzRequired  [nzSpan]="8">Supplier Name</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16" nzErrorTip="Supplier Name is required">
+                            <input nz-input placeholder="Supplier Name" formControlName="supplier" />
+                        </nz-form-control>    
+                        
+                        <nz-form-label [nzSpan]="8">Address</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16">
+                            <input nz-input placeholder="Address" formControlName="address" />
+                        </nz-form-control>  
+                        
+                        <nz-form-label [nzSpan]="8">Contact No</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16">
+                            <input nz-input placeholder="Contact No" formControlName="contact" />
+                        </nz-form-control>  
+
+                        <nz-form-label [nzSpan]="8">Email</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16" nzErrorTip="Invalid Email Address">
+                            <input nz-input placeholder="Email" formControlName="email" />
+                        </nz-form-control>  
+
+                        <nz-form-label [nzSpan]="8">Representative</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzSpan]="16">
+                            <input nz-input placeholder="Representative" formControlName="representative" />
+                        </nz-form-control>  
+
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div nz-row nzGutter="8">
+                            <div nz-col nzSpan="8">
+    
+                            </div>
+                            <div nz-col nzSpan="16">
+                                <div nz-row nzGutter="8">
+                                    <div nz-col nzSpan="12">
+                                        <nz-form-control>
+                                            <button nz-button [nzType]="'primary'" nzBlock>Save</button>
+                                        </nz-form-control>                                     
+                                    </div>
+                                    <div nz-col nzSpan="12">
+                                        <nz-form-control>
+                                            <button type="reset" (click)="onSupReset()" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                                        </nz-form-control>
+                                    </div>                                
+                                </div>                           
+                            </div>
+                        </div>
+                    </nz-form-item>                
+                </form>
+            </div>
+            <div nz-col nzSpan="14">
+                <nz-table #supTable [nzData]="allSuppliers" [nzPageSize]="50" [nzScroll]="{ y: '400px' }">
+                    <thead>
+                    <tr>
+                        <th>Suppier</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of supTable.data">
+                        <td>{{ data.supplier }}</td>
+                        <td>{{ data.address }}</td>
+                        <td> {{ data.contact }} </td>
+                        <td>
+                        <a nzTitle="Edit Supplier Info" nz-tooltip (click)="onSupEdit(data)">
+                            <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </div>        
+          </div>
+      </nz-tab>   
+      
+      <nz-tab [nzTitle]="chgPricing">
+        <ng-template #chgPricing> <i nz-icon nzType="project"></i>Product Pricing Management </ng-template>
+      <!-- PRODUCT PRICE CHANGE -->
+      <div nz-row>
+        <div nz-col nzSpan="10">
+            <form nz-form [formGroup]="priceChangeForm" (submit)="savePrice(priceChangeForm.value)">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="6">Item Code</nz-form-label>
+                  <nz-form-control nzHasFeedback [nzSpan]="17">
+                      <input nz-input placeholder="Item Code" formControlName="itemId" readonly />
+                  </nz-form-control>
+                
+                <nz-form-label nzRequired  [nzSpan]="6">Retail Price</nz-form-label>
+                <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Retail Price is required">
+                    <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="retailPrice"></nz-input-number>
+                </nz-form-control>
+    
+                <nz-form-label nzRequired  [nzSpan]="6">Whole Sale</nz-form-label>
+                <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Whole Sale Price is required">
+                    <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="wholeSalePrice"></nz-input-number>
+                </nz-form-control>
+
+                <nz-form-label nzRequired  [nzSpan]="6">Reason</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Reason is required">
+                    <input required nz-input placeholder="Why is the price changing?" formControlName="reason" />
+                </nz-form-control>
+
+                </nz-form-item>
+                <nz-form-item>
+                    <div nz-row nzGutter="8">
+                        <div nz-col nzSpan="6">
+                        </div>
+                        <div nz-col nzSpan="17">
+                            <div nz-row nzGutter="8">
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button nz-button [nzType]="'primary'" nzBlock>Save Price</button>
+                                    </nz-form-control>                                     
+                                </div>
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button type="reset" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                                    </nz-form-control>
+                                </div>                                
+                            </div>                           
+                        </div>
+                    </div>
+                </nz-form-item> 
+              </form>
+        </div>
+    
+        <!-- Stock Display -->
+        <div nz-col nzSpan="14">
+    
+            <div style="width: 50%; margin-bottom: 5px; margin-top: 5px;">
+                <nz-input-group [nzSuffix]="suffixIcon">
+                    <input type="text" nzSize="small" nz-input placeholder="Search Product" 
+                    (input)="onSearch($event.target.value)" />
+                  </nz-input-group>
+                  <ng-template #suffixIcon>
+                    <i nz-icon type="search"></i>
+                  </ng-template>
+            </div>
+            <nz-table #stockTable [nzData]="stocksToDisplay" [nzPageSize]="50" [nzScroll]="{ y: '400px' }"
+            nzFooter="Total: {{stocksToDisplay.length}}">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Retail Price</th>
+                    <th>Whole Sale</th>
+                    <th>Item Cost</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of stockTable.data">
+                    <td class="column-align">{{ data.itemName }}</td>
+                    <td class="column-align">{{ data.retailPrice }}</td>
+                    <td class="column-align">{{ data.wholeSalePrice }}</td>
+                    <td class="column-align">{{ data.cost }}</td>
+                    <td class="column-align">
+                      <a nzTitle="Change Price" nz-tooltip (click)="onEditPrice(data)">
+                        <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+      </div>    
+    </nz-tab>     
+    
+    <nz-tab [nzTitle]="prescription">
+        <ng-template #prescription> <i nz-icon nzType="solution"></i>Prescription Management </ng-template>
+      <!-- PRODUCT PRESCRIPTION MANAGEMENT -->
+      <div nz-row>
+        <div nz-col nzSpan="14">
+            <form nz-form [formGroup]="prescForm" (submit)="savePrescription(prescForm.value)">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="6">Item Code</nz-form-label>
+                  <nz-form-control nzHasFeedback [nzSpan]="17">
+                      <input nz-input placeholder="Item Code" formControlName="itemId" readonly />
+                  </nz-form-control>
+                
+                <nz-form-label nzRequired  [nzSpan]="6">Product Name</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="17">
+                    <input nz-input placeholder="Product Name" formControlName="productName" readonly />
+                </nz-form-control>
+    
+                <nz-form-label nzRequired  [nzSpan]="6">Category</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="17">
+                    <input nz-input placeholder="Product Category" formControlName="category" readonly />
+                </nz-form-control>
+
+                <nz-form-label nzRequired  [nzSpan]="6">Prescription</nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="17">
+                    <textarea rows="4" nz-input placeholder="Enter Product Prescription here" 
+                    formControlName="prescription"></textarea>
+                </nz-form-control>
+
+                </nz-form-item>
+                <nz-form-item>
+                    <div nz-row nzGutter="8">
+                        <div nz-col nzSpan="6">
+                        </div>
+                        <div nz-col nzSpan="17">
+                            <div nz-row nzGutter="8">
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button nz-button [nzType]="'primary'" nzBlock>Save</button>
+                                    </nz-form-control>                                     
+                                </div>
+                                <div nz-col nzSpan="12">
+                                    <nz-form-control>
+                                        <button type="reset" nz-button [nzType]="'danger'" nzBlock>Cancel</button>
+                                    </nz-form-control>
+                                </div>                                
+                            </div>                           
+                        </div>
+                    </div>
+                </nz-form-item> 
+              </form>
+        </div>
+    
+        <!-- Stock Display -->
+        <div nz-col nzSpan="10">
+    
+            <div style="width: 50%; margin-bottom: 5px; margin-top: 5px;">
+                <nz-input-group [nzSuffix]="suffixIconSearch">
+                    <input type="text" nzSize="small" nz-input placeholder="Search Product" 
+                    (input)="onSearch($event.target.value)" />
+                  </nz-input-group>
+                  <ng-template #suffixIconSearch>
+                    <i nz-icon type="search"></i>
+                  </ng-template>
+            </div>
+            <nz-table #prescTable [nzData]="stocksToDisplay" [nzPageSize]="50" [nzScroll]="{ y: '400px' }"
+            nzFooter="Total: {{stocksToDisplay.length}}">
+                <thead>
+                  <tr>
+                    <th>Item Code</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of prescTable.data">
+                    <td class="column-align">{{ data.itemId }}</td>
+                    <td class="column-align">{{ data.itemName }}</td>
+                    <td class="column-align">{{ data.category }}</td>
+                    <td class="column-align">
+                      <a nzTitle="Add Prescription" nz-tooltip (click)="onPrescription(data)">
+                        <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+      </div>    
+    </nz-tab>       
+  </nz-tabset>
