@@ -10,14 +10,16 @@ const httpOptions = {
 
 export class iziPosServices
 {
-    constructor( private http: HttpClient) {}
-
     serverUrl = "https://localhost:5001/api/";
     company;
     loggedInUserRole: string;
     allowRetailView: boolean;
     allowStockView: boolean;
     allowAdminView: boolean;
+
+    constructor( private http: HttpClient) {
+        this.getCompanyDetails().subscribe(res => this.company = res["0"])
+    }
 
     authentication(credentials)
     {
@@ -162,6 +164,16 @@ export class iziPosServices
         return this.http.post(this.serverUrl + "add_prescription", data, httpOptions);
     }
 
+    deleteProductById(itemId, operator)
+    {
+        return this.http.get(this.serverUrl + "delete_item/" + itemId + "/" + operator, httpOptions);
+    }
+
+    getProfitAnalysis()
+    {
+        return this.http.get(this.serverUrl + "get_profit", httpOptions);
+    }
+
     //REPORTING END POINTS
     dailySalesReport(from, to)
     {
@@ -178,15 +190,23 @@ export class iziPosServices
         return this.http.get(this.serverUrl + "returned_report/" + from + "/" + to, httpOptions);
     }
 
+    PriceChangeReport(from, to)
+    {
+        return this.http.get(this.serverUrl + "get_price_change/" + from + "/" + to, httpOptions);
+    }
+
     stockHistoryReport(from, to)
     {
         return this.http.get(this.serverUrl + "stock_report/" + from + "/" + to, httpOptions);
     }
 
+    mostSoldProducts(from, to)
+    {
+        return this.http.get(this.serverUrl + "get_most_sold/" + from + "/" + to, httpOptions);
+    }
+
     printingService(section)
     {
-        this.getCompanyDetails().subscribe(res => this.company = res["0"])
-
         let printContents, popupWin;
         printContents = document.getElementById(section).innerHTML;
         popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');

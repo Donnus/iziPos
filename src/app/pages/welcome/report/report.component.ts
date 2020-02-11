@@ -25,14 +25,26 @@ export class ReportComponent
     st: boolean;
     em: boolean;
     ex: boolean;
+    pr: boolean;
+    mr: boolean;
+    pa: boolean;
 
     rptDaily: any = [];
     rptReturned: any = [];
     rptStock: any = [];
     rptEmp: any = [];
     rptExp: any = [];
+    rptPrice: any = [];
+    rptMost: any = [];
+    qty;
+    retail;
+    whole;
+    cost;
+    profitRetail;
+    profitWhole;
 
     count:number;
+    totalSales = 0;
 
     companyName;
 
@@ -89,6 +101,33 @@ export class ReportComponent
         this.rpv = "x";
         this.setVisible();        
     }
+    onPriceChange()
+    {
+        this.location.locationTitle = "Report - Price Change Report";
+        this.rpv = "p";
+        this.setVisible();          
+    }
+    onMostRequested()
+    {
+        this.location.locationTitle = "Report - Most Requested Products Report";
+        this.rpv = "m";
+        this.setVisible();        
+    }
+
+    onProfitAnalysis()
+    {
+        this.location.locationTitle = "Report - Profit Analysis Report";
+        this.rpv = "i";
+        this.services.getProfitAnalysis().subscribe(res => {
+            this.qty = res[0].qty;
+            this.retail = res[0].retail;
+            this.whole = res[0].whole;
+            this.cost = res[0].cost;
+            this.profitRetail = res[0].profitRetail;
+            this.profitWhole = res[0].profitWhole;
+        });
+        this.setVisible();         
+    }
 
     onPrint()
     {
@@ -101,7 +140,11 @@ export class ReportComponent
         if(this.rpv == "e")
             this.services.printingService("empPickReport");
         if(this.rpv == "x")
-            this.services.printingService("expiredReport");        
+            this.services.printingService("expiredReport");     
+        if(this.rpv == "p")
+            this.services.printingService("priceChangeReport");  
+        if(this.rpv == "m")
+            this.services.printingService("mostRequestedReport");               
     }
 
     onFilter()
@@ -109,7 +152,11 @@ export class ReportComponent
         if (this.rpv == "d")
             this.services.dailySalesReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
-                this.rptDaily = rpt; this.count = this.rptDaily.length;});
+                this.rptDaily = rpt; this.count = this.rptDaily.length;
+                this.rptDaily.forEach(e => {
+                    this.totalSales += e.total;
+                });
+            });
         if (this.rpv == "r")
             this.services.returnedProductsReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
@@ -126,6 +173,14 @@ export class ReportComponent
             this.services.getExpiredProducts(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
                 this.rptExp = rpt; this.count = this.rptExp.length});
+        if (this.rpv == "p")
+        this.services.PriceChangeReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
+        this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
+            this.rptPrice = rpt; this.count = this.rptPrice.length});    
+        if (this.rpv == "m")
+        this.services.mostSoldProducts(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
+        this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
+            this.rptMost = rpt; this.count = this.rptMost.length});             
     }
 
     setVisible()
@@ -135,6 +190,9 @@ export class ReportComponent
         this.rt = false;
         this.st = false;
         this.ex = false;
+        this.pr = false;
+        this.mr = false;
+        this.pa = false;
         if (this.rpv == "d")
             this.ds = true;
         else if ( this.rpv == "r")
@@ -145,6 +203,12 @@ export class ReportComponent
             this.em = true;
         else if (this.rpv == "x")
             this.ex = true;
+        else if (this.rpv == "p")
+            this.pr = true;
+        else if (this.rpv == "m")
+            this.mr = true;
+        else if (this.rpv == "i")
+            this.pa = true;            
     }
     
 }

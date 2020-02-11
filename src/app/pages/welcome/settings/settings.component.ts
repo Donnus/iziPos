@@ -73,8 +73,9 @@ export class SettingsComponent
             itemId: new FormControl(0, Validators.required),
             retailPrice: new FormControl('', Validators.required),
             wholeSalePrice: new FormControl('', Validators.required),
+            cost: new FormControl('', Validators.required),
             reason: new FormControl('', Validators.required),
-            operator: new FormControl('')
+            operator: new FormControl(sessionStorage.getItem("userId"))
         })
 
         this.prescForm = new FormGroup({
@@ -175,18 +176,18 @@ export class SettingsComponent
 
     savePrice(details)
     {
-        var user = sessionStorage.getItem("userId");
-        
-        this.priceChangeForm.get("operator").setValue(user);
         for (const i in this.priceChangeForm.controls) {
             this.priceChangeForm.controls[ i ].markAsDirty();
             this.priceChangeForm.controls[ i ].updateValueAndValidity();
           }
         if(this.priceChangeForm.valid)  
         {
-            console.log(details);
-            
-            this.service.processPriceChange(details).subscribe(res => console.log(res))
+            this.service.processPriceChange(details).subscribe(res => {
+                this.priceChangeR = res;
+                this.msg.create('success', this.priceChangeR.message);
+                this.getAllStocks();
+                this.priceChangeForm.reset();
+            })
         }
     }
 
@@ -233,6 +234,14 @@ export class SettingsComponent
             this.msg.create('success', res[0].message);
             this.prescForm.reset();
         });
+    }
+
+    onDelete(data)
+    {
+        this.service.deleteProductById(data.itemId, sessionStorage.getItem("userId")).subscribe(res => {
+            this.msg.create('success', res[0].message);
+            this.getAllStocks();
+        });        
     }
 
 }

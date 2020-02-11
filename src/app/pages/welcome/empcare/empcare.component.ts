@@ -3,7 +3,7 @@ import { iziPosServices } from './../../../iziPos.services';
 import { WelcomeComponent } from './../welcome.component';
 import { Component, OnInit } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { NzMessageService, isEmpty } from 'ng-zorro-antd';
+import { NzMessageService, isEmpty, NzModalService } from 'ng-zorro-antd';
 
 @Component({
     selector: 'app-empcare',
@@ -42,7 +42,7 @@ export class EmpCareComponent implements OnInit
     reason:string = "";
 
     constructor(private location: WelcomeComponent, private services: iziPosServices
-      ,private msg: NzMessageService, private router: Router) {}
+      ,private msg: NzMessageService, private router: Router, private modalServ: NzModalService) {}
 
     ngOnInit(): void {
       if(!this.services.allowAdminView)
@@ -210,7 +210,10 @@ export class EmpCareComponent implements OnInit
       this.services.getPrescriptionById(data.itemId).subscribe(res => {
         this.serverResponse = res;
             if(this.serverResponse.length === 0) return;
-            alert(res[0].message);
+            this.modalServ.info({
+              nzTitle: data.itemName,
+              nzContent: "<pre>" + res[0].message + "</pre>"
+            })
       })
     }
 }

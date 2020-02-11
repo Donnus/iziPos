@@ -11,7 +11,13 @@
           <li nz-menu-item (click)="onEmployee()">
             <i nz-icon nzType="solution" nzTheme="outline"></i> Employees Pick</li>
         <li nz-menu-item (click)="onExpired()">
-            <i nz-icon nzType="schedule" nzTheme="outline"></i> Expired Products</li>            
+            <i nz-icon nzType="schedule" nzTheme="outline"></i> Expired Products</li>
+        <li nz-menu-item (click)="onPriceChange()">
+            <i nz-icon nzType="swap" nzTheme="outline"></i> Price Change</li>   
+        <li nz-menu-item (click)="onMostRequested()">
+            <i nz-icon nzType="trophy" nzTheme="outline"></i> Most Requested</li>       
+        <li nz-menu-item (click)="onProfitAnalysis()">
+            <i nz-icon nzType="pie-chart" nzTheme="outline"></i> Profit Analysis</li>                            
         </ul>
       </nz-sider>
       <nz-content class="inner-content">
@@ -45,7 +51,7 @@
                         <td>{{data.tbtBox}}</td>
                         <td> {{data.unitPrice}} </td>
                         <td> {{data.total}} </td>
-                        <td> {{data.datePosted | date : 'dd-MMM-yyyy hh:mm:ss'}} </td>
+                        <td> {{data.datePosted | date : 'dd-MMM-yyyy'}} </td>
                         <td> {{data.cashier}} </td>
                     </tr>
                 </tbody>
@@ -173,15 +179,117 @@
   
       </div> <!--Expired Report End-->    
 
+      <div [ngClass]="{ReportGone:pr===false , ReportVisible:pr===true }"> <!--Price Change Report-->
+        <nz-table #PriceTable [nzData]="rptPrice" [nzPageSize]="10" [nzFooter]="footer">
+            <thead>
+                <tr>
+                    <!-- <th>Id</th> -->
+                    <th>Name</th>
+                    <th>Old Retail</th>
+                    <th>Old Whole</th>
+                    <th>Old Cost</th>
+                    <th>New Retail</th>
+                    <th>New Whole</th>
+                    <th>New Cost</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>Operator</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of PriceTable.data">
+                    <!-- <td>{{data.itemId}}</td> -->
+                    <td>{{data.itemName}}</td>
+                    <td>{{data.oldRetailPrice | currency: ' '}}</td>
+                    <td> {{data.oldWholePrice | currency: ' '}} </td>
+                    <td> {{data.oldCost | currency: ' '}} </td>
+                    <td> {{data.newRetailPrice | currency: ' '}} </td>
+                    <td> {{data.newWholePrice | currency: ' '}} </td>
+                    <td> {{data.newCost | currency: ' '}} </td>
+                    <td> {{data.priceChangeReason}} </td>
+                    <td> {{data.DateChanged | date : 'dd-MMM-yyyy'}} </td>
+                    <td> {{data.operator}} </td>
+                </tr>
+            </tbody>
+        </nz-table>
+  
+      </div> <!--Price Change Report End-->    
+      
+      <div [ngClass]="{ReportGone:mr===false , ReportVisible:mr===true }"> <!--Most Sold Report-->
+        <nz-table #mostReqTable [nzData]="rptMost" [nzPageSize]="10" [nzFooter]="footer">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Product Id</th>
+                    <th>Product Name</th>
+                    <th>Qty in Stock</th>
+                    <th>Retail</th>
+                    <th>Whole</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of mostReqTable.data">
+                    <td>{{data.rank}}</td>
+                    <td>{{data.productId}}</td>
+                    <td> {{data.productName}} </td>
+                    <td> {{data.qty}} </td>
+                    <td> {{data.retail | currency: ' '}} </td>
+                    <td> {{data.whole | currency: ' '}} </td>
+                    <td> {{data.cost | currency: ' '}} </td>
+                </tr>
+            </tbody>
+        </nz-table>
+  
+      </div> <!--most Sold Report End-->     
+      
+      <div style="text-align: center;" [ngClass]="{ReportGone:pa===false , ReportVisible:pa===true }"> <!--Profit Analysis Report-->
+        <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+                <nz-card style="width:300px;">
+                    <nz-statistic [nzValue]="retail | number: '1.0-2'" [nzTitle]="'Expected Total Retail Amount (GHS)'"></nz-statistic>
+                  </nz-card>                
+            </nz-col>
+            <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
+                <nz-card style="width:300px;">
+                    <nz-statistic [nzValue]="whole | number: '1.0-2'" [nzTitle]="'Expected Total Wholesale Amount (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>            
+            <nz-col [nzSpan]="12">
+                <nz-card style="width:300px;">
+                    <nz-statistic [nzValue]="qty | number" [nzTitle]="'Total Products In Stocks'"></nz-statistic>
+                </nz-card>                
+            </nz-col>       
+            <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
+                <nz-card style="width:300px;">
+                    <nz-statistic [nzValue]="cost | number: '1.0-2'" [nzTitle]="'Total Products Cost (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>                    
+            <nz-col [nzSpan]="12">
+                <nz-card style="width:300px;">
+                    <nz-statistic [nzValue]="profitRetail | number: '1.0-2'" [nzTitle]="'Expected Total Profit Retail (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col> 
+            <nz-col [nzSpan]="12">
+            <nz-card style="width:300px;">
+                <nz-statistic [nzValue]="profitWhole | number: '1.0-2'" [nzTitle]="'Expected Total Profit Wholesale (GHS)'"></nz-statistic>
+            </nz-card>                
+            </nz-col>                          
+          </nz-row>
+    </div>      
+
     <ng-template #footer>
         <div nz-row>
             <div nz-col [nzSpan] = "12">
                 <button nz-button nzType="primary" (click)="onPrint()">
                     <i nz-icon type="printer" ></i> Print</button>
             </div>
-            <div nz-col [nzSpan] = "12">
+            <div nz-col [nzSpan] = "6">
                 Total: {{count}}
-            </div>                    
+            </div> 
+            <div nz-col [nzSpan]="6" *ngIf="totalSales != 0">
+                Total Sales : {{totalSales | currency: ' '}}
+            </div>                   
         </div>
     </ng-template>
   <!-- REPORT ENDS HERE -->
@@ -219,6 +327,15 @@
               <td> {{data.cashier}} </td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+              <td><b>TOTAL: {{count}}</b></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><b>TOTAL SALES : {{totalSales | currency: ' '}} </b></td>
+            </tr>
+          </tfoot>
     </table>
 </div>
 
@@ -358,4 +475,75 @@
     </table>
 </div>
 
+<!-- PRICE CHANGE -->
+<div id="priceChangeReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Products Price Change Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Old Retail Price</th>
+                <th>Old Wholesale Price</th>
+                <th>Old Cost</th>
+                <th>New Retail Price</th>
+                <th>New Wholesale Price </th>
+                <th>New Cost</th>
+                <th>Reason</th>
+                <th>Date</th>
+                <th>Operator</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptPrice">
+                <td>{{data.itemId}}</td>
+                <td>{{data.itemName}}</td>
+                <td>{{data.oldRetailPrice | currency: ' '}}</td>
+                <td> {{data.oldWholePrice | currency: ' '}} </td>
+                <td> {{data.oldCost | currency: ' '}} </td>
+                <td> {{data.newRetailPrice | currency: ' '}} </td>
+                <td> {{data.newWholePrice | currency: ' '}} </td>
+                <td> {{data.newCost | currency: ' '}} </td>
+                <td> {{data.priceChangeReason}} </td>
+                <td> {{data.DateChanged | date : 'dd-MMM-yyyy'}} </td>
+                <td> {{data.operator}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- MOST REQUESTED PRODUCTS -->
+<div id="mostRequestedReport" style="display: none">
+    <h1 style="width: 100%; text-align: center; margin-bottom: 10px;">{{companyName}}</h1>
+    <h3 style="width: 100%; text-align: center; margin-bottom: 10px;">Most Requested Products Report</h3>
+    <h4 style="width: 100%; text-align: right; margin-bottom: 10px;"> From:&nbsp; {{fromDate | date:"dd/MMM/yyyy"}} &nbsp;&nbsp;&nbsp; To: {{toDate | date:"dd/MMM/yyyy"}}
+    </h4>
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Qty in Stock</th>
+                <th>Retail</th>
+                <th>Whole</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of rptMost">
+                <td>{{data.rank}}</td>
+                <td>{{data.productId}}</td>
+                <td> {{data.productName}} </td>
+                <td> {{data.qty}} </td>
+                <td> {{data.retail | currency: ' '}} </td>
+                <td> {{data.whole | currency: ' '}} </td>
+                <td> {{data.cost | currency: ' '}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
   <!-- END PRINTING SECTION -->

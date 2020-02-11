@@ -171,6 +171,10 @@
                 <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Whole Sale Price is required">
                     <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="wholeSalePrice"></nz-input-number>
                 </nz-form-control>
+                <nz-form-label nzRequired  [nzSpan]="6">Cost</nz-form-label>
+                <nz-form-control [nzSpan]="17" nzHasFeedback nzErrorTip="Item Cost is required">
+                    <nz-input-number [nzMin]="0.10" [nzStep]="0.1" class="item-cost" formControlName="cost"></nz-input-number>
+                </nz-form-control>                
 
                 <nz-form-label nzRequired  [nzSpan]="6">Reason</nz-form-label>
                 <nz-form-control nzHasFeedback [nzSpan]="17" nzErrorTip="Reason is required">
@@ -233,6 +237,11 @@
                     <td class="column-align">
                       <a nzTitle="Change Price" nz-tooltip (click)="onEditPrice(data)">
                         <i nz-icon nzType="edit" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a nzTitle="Delete this Product" nz-tooltip nz-popconfirm
+                        nzPopconfirmTitle="Are you sure?"
+                        nzOkText="Yes" nzCancelText="Cancel" (nzOnConfirm)="onDelete(data)">
+                            <i nz-icon nzType="delete" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></i></a>                        
                     </td>
                   </tr>
                 </tbody>
