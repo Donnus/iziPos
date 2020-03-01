@@ -2,7 +2,7 @@
     <div>
         <nz-input-group [nzSuffix]="suffixIconSearch">
             <input type="text" [(ngModel)]="search" name="search" id="search" [nzAutocomplete]="auto" (input)="onSearch($event.target.value)"
-            nz-input placeholder="Scan Barcode or Enter Product Name" />
+            nz-input placeholder="Scan Barcode or Enter Product Name" (keyup.enter)="onEnter()" />
           </nz-input-group>
           <ng-template #suffixIconSearch>
             <i nz-icon nzType="search"></i>
@@ -10,7 +10,7 @@
 
           <nz-autocomplete #auto>
             <nz-auto-option *ngFor="let s of suggestions" [nzLabel]="s.itemName" [nzValue]="s.itemId"
-            (click)="onSelect(s)" (keyup.enter)="onEnter()">
+            (click)="onSelect(s)">
                 {{ s.itemName }}
             </nz-auto-option>
           </nz-autocomplete>
@@ -23,7 +23,7 @@
                 </nz-form-item>
                 <nz-form-item>
                   <nz-form-control>
-                    <nz-input-number [nzMin]="1" [(ngModel)]="quantity" name="quantity" [nzStep]="1" 
+                    <nz-input-number [nzMin]="1" [(ngModel)]="quantity" name="quantity" [nzStep]="1"
                     placeholder="Quantity" (ngModelChange)="onQtyChange()"></nz-input-number>
                   </nz-form-control>
                 </nz-form-item>

@@ -17,7 +17,9 @@
         <li nz-menu-item (click)="onMostRequested()">
             <i nz-icon nzType="trophy" nzTheme="outline"></i> Most Requested</li>       
         <li nz-menu-item (click)="onProfitAnalysis()">
-            <i nz-icon nzType="pie-chart" nzTheme="outline"></i> Profit Analysis</li>                            
+            <i nz-icon nzType="pie-chart" nzTheme="outline"></i> Profit Analysis</li> 
+        <li nz-menu-item (click)="onIncome()">
+            <i nz-icon nzType="import" nzTheme="outline"></i> Income Report</li>                                
         </ul>
       </nz-sider>
       <nz-content class="inner-content">
@@ -207,7 +209,7 @@
                     <td> {{data.newWholePrice | currency: ' '}} </td>
                     <td> {{data.newCost | currency: ' '}} </td>
                     <td> {{data.priceChangeReason}} </td>
-                    <td> {{data.DateChanged | date : 'dd-MMM-yyyy'}} </td>
+                    <td> {{data.dateChanged | date : 'dd-MMM-yyyy'}} </td>
                     <td> {{data.operator}} </td>
                 </tr>
             </tbody>
@@ -247,12 +249,12 @@
         <nz-row [nzGutter]="16">
             <nz-col [nzSpan]="12">
                 <nz-card style="width:300px;">
-                    <nz-statistic [nzValue]="retail | number: '1.0-2'" [nzTitle]="'Expected Total Retail Amount (GHS)'"></nz-statistic>
+                    <nz-statistic [nzValue]="retail | currency:' '" [nzTitle]="'Expected Total Retail Amount (GHS)'"></nz-statistic>
                   </nz-card>                
             </nz-col>
             <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
                 <nz-card style="width:300px;">
-                    <nz-statistic [nzValue]="whole | number: '1.0-2'" [nzTitle]="'Expected Total Wholesale Amount (GHS)'"></nz-statistic>
+                    <nz-statistic [nzValue]="whole | currency:' '" [nzTitle]="'Expected Total Wholesale Amount (GHS)'"></nz-statistic>
                 </nz-card>                
             </nz-col>            
             <nz-col [nzSpan]="12">
@@ -262,21 +264,51 @@
             </nz-col>       
             <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
                 <nz-card style="width:300px;">
-                    <nz-statistic [nzValue]="cost | number: '1.0-2'" [nzTitle]="'Total Products Cost (GHS)'"></nz-statistic>
+                    <nz-statistic [nzValue]="cost | currency:' '" [nzTitle]="'Total Products Cost (GHS)'"></nz-statistic>
                 </nz-card>                
             </nz-col>                    
             <nz-col [nzSpan]="12">
                 <nz-card style="width:300px;">
-                    <nz-statistic [nzValue]="profitRetail | number: '1.0-2'" [nzTitle]="'Expected Total Profit Retail (GHS)'"></nz-statistic>
+                    <nz-statistic [nzValue]="profitRetail | currency:' '" [nzTitle]="'Expected Total Profit Retail (GHS)'"></nz-statistic>
                 </nz-card>                
             </nz-col> 
             <nz-col [nzSpan]="12">
             <nz-card style="width:300px;">
-                <nz-statistic [nzValue]="profitWhole | number: '1.0-2'" [nzTitle]="'Expected Total Profit Wholesale (GHS)'"></nz-statistic>
+                <nz-statistic [nzValue]="profitWhole | currency:' '" [nzTitle]="'Expected Total Profit Wholesale (GHS)'"></nz-statistic>
             </nz-card>                
             </nz-col>                          
           </nz-row>
-    </div>      
+    </div>     
+    
+    <div style="text-align: center;" [ngClass]="{ReportGone:in===false , ReportVisible:in===true }"> <!--Actual Income Report-->
+        <nz-row [nzGutter]="16" *ngFor="let in of rptIncome">
+            <nz-col [nzSpan]="12">
+                <nz-card style="width:300px;background-color: lightyellow;">
+                    <nz-statistic [nzValue]="in.totalRetail | currency:' '" [nzTitle]="'Total Retail Amount (GHS)'"></nz-statistic>
+                  </nz-card>                
+            </nz-col>
+            <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
+                <nz-card style="width:300px;background-color: lightyellow;">
+                    <nz-statistic [nzValue]="in.totalWhole | currency:' '" [nzTitle]="'Total Wholesale Amount (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>            
+            <nz-col [nzSpan]="12">
+                <nz-card style="width:300px;background-color: lightsalmon;">
+                    <nz-statistic [nzValue]="in.totalStaffPick | currency:' '" [nzTitle]="'Total Cost Employees Pick (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>       
+            <nz-col [nzSpan]="12" style="margin-bottom: 20px;">
+                <nz-card style="width:300px; background-color: lightsalmon;">
+                    <nz-statistic [nzValue]="in.totalCost | currency:' '" [nzTitle]="'Total Products Cost (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>                    
+            <nz-col [nzSpan]="24" style="width: 704px;">
+                <nz-card style="background-color: lightgreen;">
+                    <nz-statistic [nzValue]="in.income | currency:' '" [nzTitle]="'Actual Total Income (GHS)'"></nz-statistic>
+                </nz-card>                
+            </nz-col>                         
+          </nz-row>
+    </div>       
 
     <ng-template #footer>
         <div nz-row>
@@ -508,7 +540,7 @@
                 <td> {{data.newWholePrice | currency: ' '}} </td>
                 <td> {{data.newCost | currency: ' '}} </td>
                 <td> {{data.priceChangeReason}} </td>
-                <td> {{data.DateChanged | date : 'dd-MMM-yyyy'}} </td>
+                <td> {{data.dateChanged | date : 'dd-MMM-yyyy'}} </td>
                 <td> {{data.operator}} </td>
             </tr>
         </tbody>

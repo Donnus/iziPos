@@ -28,6 +28,7 @@ export class ReportComponent
     pr: boolean;
     mr: boolean;
     pa: boolean;
+    in: boolean;
 
     rptDaily: any = [];
     rptReturned: any = [];
@@ -36,6 +37,7 @@ export class ReportComponent
     rptExp: any = [];
     rptPrice: any = [];
     rptMost: any = [];
+    rptIncome: any = [];
     qty;
     retail;
     whole;
@@ -128,6 +130,12 @@ export class ReportComponent
         });
         this.setVisible();         
     }
+    onIncome()
+    {
+        this.location.locationTitle = "Report - Actual Income Report";
+        this.rpv = "a";
+        this.setVisible(); 
+    }
 
     onPrint()
     {
@@ -153,6 +161,7 @@ export class ReportComponent
             this.services.dailySalesReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
                 this.rptDaily = rpt; this.count = this.rptDaily.length;
+                this.totalSales = 0
                 this.rptDaily.forEach(e => {
                     this.totalSales += e.total;
                 });
@@ -164,11 +173,16 @@ export class ReportComponent
         if (this.rpv == "s")
             this.services.stockHistoryReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
-                this.rptStock = rpt; this.count = this.rptStock.length});
+                this.rptStock = rpt; this.count = this.rptStock.length;});
         if (this.rpv == "e")
             this.services.employeeCareReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
-                this.rptEmp = rpt; this.count = this.rptEmp.length});
+                this.rptEmp = rpt; this.count = this.rptEmp.length;
+                this.totalSales = 0
+                this.rptEmp.forEach(e => {
+                    this.totalSales += e.total;
+                });
+            });
         if (this.rpv == "x")
             this.services.getExpiredProducts(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
             this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
@@ -180,7 +194,11 @@ export class ReportComponent
         if (this.rpv == "m")
         this.services.mostSoldProducts(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
         this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
-            this.rptMost = rpt; this.count = this.rptMost.length});             
+            this.rptMost = rpt; this.count = this.rptMost.length}); 
+        this.services.incomeReport(this.dp.transform(this.fromDate,'yyyy-MM-dd'), 
+        this.dp.transform(this.toDate,'yyyy-MM-dd')).subscribe(rpt => {
+            this.rptIncome = rpt; this.count = this.rptIncome.length;
+        });             
     }
 
     setVisible()
@@ -193,6 +211,7 @@ export class ReportComponent
         this.pr = false;
         this.mr = false;
         this.pa = false;
+        this.in = false;
         if (this.rpv == "d")
             this.ds = true;
         else if ( this.rpv == "r")
@@ -208,7 +227,9 @@ export class ReportComponent
         else if (this.rpv == "m")
             this.mr = true;
         else if (this.rpv == "i")
-            this.pa = true;            
+            this.pa = true;  
+        else if (this.rpv == "a")
+            this.in = true;          
     }
     
 }

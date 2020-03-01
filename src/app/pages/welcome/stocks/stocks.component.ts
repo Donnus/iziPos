@@ -5,11 +5,13 @@ import { WelcomeComponent } from './../welcome.component';
 import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as XLSX from 'xlsx'; 
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-stocks',
     templateUrl: 'stocks.component.html',
-    styleUrls: ['stocks.component.css']
+    styleUrls: ['stocks.component.css'],
+    providers: [DatePipe]
 })
 
 export class StocksComponent implements OnInit
@@ -39,7 +41,8 @@ export class StocksComponent implements OnInit
     companyName;
 
     constructor(private home : WelcomeComponent, 
-      private services: iziPosServices, private msg: NzMessageService, private router: Router){} 
+      private services: iziPosServices, private msg: NzMessageService, private router: Router,
+      private dp: DatePipe){} 
 
     ngOnInit(): void {
 
@@ -88,6 +91,7 @@ export class StocksComponent implements OnInit
       {
 
         this.isLoading = true;
+        details.expiryDate = this.dp.transform(details.expiryDate, 'dd-MMM-yyyy')
         this.services.addEditStocks(details,this.loggedInUser,this.action).subscribe(res =>
           {
             this.serverResponse = res;

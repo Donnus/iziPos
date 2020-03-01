@@ -26,6 +26,7 @@ export class RetailComponent implements OnInit
     };
 
     productReturnRes;
+    getItemIdOnEnter;
 
     total = 0.00;
     totalSales = 0.00;
@@ -79,8 +80,12 @@ export class RetailComponent implements OnInit
 
     onEnter()
     {
-      console.log("Enter Pressed");
-      
+      this.getItemIdOnEnter = this.search;
+      if (isNaN(this.getItemIdOnEnter)) return;
+      const data = this.allProducts.filter(x => x.itemId === this.search);
+
+      this.search = data[0].itemName;
+      this.onSelect(data[0]);
     }
 
     onSelect(selected)

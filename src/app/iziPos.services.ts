@@ -205,6 +205,11 @@ export class iziPosServices
         return this.http.get(this.serverUrl + "get_most_sold/" + from + "/" + to, httpOptions);
     }
 
+    incomeReport(from, to)
+    {
+        return this.http.get(this.serverUrl + "income/" + from + "/" + to, httpOptions);
+    }
+
     printingService(section)
     {
         let printContents, popupWin;

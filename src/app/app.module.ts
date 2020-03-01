@@ -77,7 +77,8 @@ registerLocaleData(en);
         { path: 'payment', component: PaymentComponent },
         { path: 'sms', component: SmsComponent }
       ] },
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },
+      { path: '**', redirectTo: '/login' }
     ])
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }, iziPosServices, AuthServices],
